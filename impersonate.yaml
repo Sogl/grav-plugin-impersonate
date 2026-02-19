@@ -1,0 +1,10 @@
+enabled: true
+allow_admin_targets: false
+token_ttl_seconds: 45
+default_redirect: /
+log_events: true
+show_ui_button: true
+confirm_on_switch: true
+icon_start: fa-arrow-right-arrow-left
+icon_stop: fa-arrow-right-from-bracket
+icon_self: fa-arrow-right-to-bracket

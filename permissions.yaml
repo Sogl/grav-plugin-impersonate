@@ -1,0 +1,15 @@
+actions:
+  admin.impersonate:
+    label: PLUGIN_IMPERSONATE.PERMISSIONS.IMPERSONATE
+    actions:
+      self:
+        label: PLUGIN_IMPERSONATE.PERMISSIONS.SELF
+      users:
+        label: PLUGIN_IMPERSONATE.PERMISSIONS.USERS
+      logs:
+        label: PLUGIN_IMPERSONATE.PERMISSIONS.LOGS
+
+types:
+  default:
+    type: access
+

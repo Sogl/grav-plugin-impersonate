@@ -1,0 +1,48 @@
+{% set split_enabled = config.get('system.session.split', false) %}
+{% set ui_enabled = config.get('plugins.impersonate.show_ui_button', true) %}
+{% set actor = grav.user.username|default('') %}
+{% set actor_email = grav.user.email|default('') %}
+{% set target_username = object.getProperty('username')|default(object.username|default(object.getKey()|default(''))) %}
+{% set target_email = object.getProperty('email')|default(object.email|default('')) %}
+{% set target = target_username ?: object.getKey()|default('') %}
+
+{# Smart check for self: username case-insensitive or email match #}
+{# Smart check for self: username case-insensitive only #}
+{% set is_self = (actor and target and actor|lower == target|lower) %}
+
+{% set target_is_admin = impersonate_is_admin(object) %}
+{% set allow_admin_targets = config.get('plugins.impersonate.allow_admin_targets', false) %}
+{% set target_site_login = object.access.site.login ?? true %}
+{% set icon_start = config.get('plugins.impersonate.icon_start', 'fa-arrow-right-arrow-left') %}
+{% set icon_stop = config.get('plugins.impersonate.icon_stop', 'fa-arrow-right-from-bracket') %}
+{% set icon_self = config.get('plugins.impersonate.icon_self', 'fa-arrow-right-to-bracket') %}
+{% set can_users = grav.user.authorize('admin.impersonate.users') or grav.user.authorize('admin.super') %}
+{% set can_self = grav.user.authorize('admin.impersonate.self') or grav.user.authorize('admin.super') %}
+{# Stop should be allowed for anyone who can impersonate (self/users) or super. #}
+{% set can_stop = can_users or can_self %}
+{% set enabled_user = object.state|default('enabled') == 'enabled' %}
+{% set can_start = is_self ? can_self : (can_users and enabled_user and (allow_admin_targets or not target_is_admin) and target_site_login) %}
+{% set active_state = impersonate_state|default(twig_vars.impersonate_state|default({})) %}
+{% set is_active_target = active_state.active|default(false) and active_state.target|default('') == target %}
+{% set param_sep = config.system.param_sep|default(':') %}
+{% set admin_route_path = '/' ~ (config.plugins.admin.route|default('/admin')|trim('/')) %}
+{% set start_task = is_self ? 'impersonateSelf' : 'impersonate' %}
+{% set start_route_raw = admin_route_path ~ '/task' ~ param_sep ~ start_task %}
+{% if not is_self %}
+	{% set start_route_raw = start_route_raw ~ '/target' ~ param_sep ~ target %}
+{% endif %}
+{% set stop_route_raw = admin_route_path ~ '/task' ~ param_sep ~ 'stopImpersonate' %}
+{% set start_route = uri.addNonce(start_route_raw, 'admin-form', 'admin-nonce') %}
+{% set stop_route = uri.addNonce(stop_route_raw, 'admin-form', 'admin-nonce') %}
+
+{% if split_enabled and ui_enabled and target %}
+	{% if is_active_target and can_stop %}
+		<a href="#" title="Stop impersonate '{{ target|e }}'" class="impersonate-user-action impersonate-stop-action" data-imp-target="{{ target|e }}" data-imp-start-url="{{ start_route|e }}" data-imp-stop-url="{{ stop_route|e }}" data-imp-stop-task-url="{{ stop_route|e }}" data-imp-active="1" data-imp-mode="{{ is_self ? 'self' : 'user' }}" data-debug-actor="{{ actor }}" data-debug-target="{{ target }}" data-debug-self="{{ is_self ? 'yes' : 'no' }}">
+			<i class="fa {{ icon_stop|e('html_attr') }}"></i>
+		</a>
+	{% elseif can_start %}
+		<a href="{{ start_route }}" title="Impersonate '{{ target|e }}'" class="impersonate-user-action impersonate-start-action" target="_blank" data-imp-target="{{ target|e }}" data-imp-start-url="{{ start_route|e }}" data-imp-stop-url="{{ stop_route|e }}" data-imp-active="0" data-imp-mode="{{ is_self ? 'self' : 'user' }}" data-debug-actor="{{ actor }}" data-debug-target="{{ target }}" data-debug-self="{{ is_self ? 'yes' : 'no' }}">
+			<i class="fa {{ (is_self ? icon_self : icon_start)|e('html_attr') }}"></i>
+		</a>
+	{% endif %}
+{% endif %}

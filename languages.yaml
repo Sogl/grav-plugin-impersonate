@@ -1,0 +1,60 @@
+en:
+  PLUGIN_IMPERSONATE:
+    ALLOW_ADMIN_TARGETS: Allow Admin Targets
+    TOKEN_TTL_SECONDS: Token TTL (seconds)
+    DEFAULT_REDIRECT: Default Redirect Path
+    LOG_EVENTS: Log Events
+    SHOW_UI_BUTTON: Show UI Buttons
+    CONFIRM_ON_SWITCH: Confirm on User Switch
+    ICON_START: Start Icon Class (users list)
+    ICON_STOP: Stop Icon Class
+    ICON_SELF: Self Login Icon Class (quick tray)
+    TAB_SETTINGS: Settings
+    TAB_LOGS: Logs
+    LOGS_HELP: View recent impersonation events from `logs/impersonate.log` (last 200 KB):
+    LOG_LOADING: Loading log...
+    LOG_LOAD_FAILED: Failed to load log. Open Logs tab to retry.
+    LOG_VIEWER: Impersonate Log
+    LOG_FILE: Log file
+    REFRESH_LOG: Refresh Log
+    CLEAR_LOG: Clear Log
+    MODAL:
+      SWITCH_TITLE: Confirm Switch
+      SWITCH_CANCEL: Cancel
+      SWITCH_CONFIRM: Switch
+      SWITCH_TEXT: You are already logged in as %current%. Switch to %target%?
+    PERMISSIONS:
+      IMPERSONATE: Impersonate
+      SELF: Impersonate Self
+      USERS: Impersonate Users
+      LOGS: View/Clear Logs
+ru:
+  PLUGIN_IMPERSONATE:
+    ALLOW_ADMIN_TARGETS: Разрешить impersonate в админов
+    TOKEN_TTL_SECONDS: TTL токена (секунды)
+    DEFAULT_REDIRECT: Путь редиректа по умолчанию
+    LOG_EVENTS: Логировать события
+    SHOW_UI_BUTTON: Показывать кнопки UI
+    CONFIRM_ON_SWITCH: Подтверждать переключение пользователя
+    ICON_START: CSS-класс иконки входа (список пользователей)
+    ICON_STOP: CSS-класс иконки выхода
+    ICON_SELF: CSS-класс иконки входа админа (quick tray)
+    TAB_SETTINGS: Настройки
+    TAB_LOGS: Логи
+    LOGS_HELP: Просмотр последних событий impersonate из `logs/impersonate.log` (последние 200 KB):
+    LOG_LOADING: Загрузка лога...
+    LOG_LOAD_FAILED: Не удалось загрузить лог. Откройте вкладку «Логи», чтобы повторить.
+    LOG_VIEWER: Лог Impersonate
+    LOG_FILE: Файл лога
+    REFRESH_LOG: Обновить лог
+    CLEAR_LOG: Очистить лог
+    MODAL:
+      SWITCH_TITLE: Подтверждение
+      SWITCH_CANCEL: Отмена
+      SWITCH_CONFIRM: Переключиться
+      SWITCH_TEXT: Вы уже залогинены как %current%. Переключиться на %target%?
+    PERMISSIONS:
+      IMPERSONATE: Имперсонация
+      SELF: Войти под собой
+      USERS: Войти под пользователем
+      LOGS: Просмотр/очистка логов

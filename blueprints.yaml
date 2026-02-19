@@ -1,0 +1,119 @@
+name: Impersonate
+slug: impersonate
+type: plugin
+version: 1.0.0
+description: Admin frontend impersonation for users
+icon: arrow-right-arrow-left
+author:
+  name: Artyom Mezin
+  email: artyom@mezin.me
+homepage: https://github.com/Sogl/grav-plugin-impersonate
+keywords: grav, plugin, impersonate, login as user
+bugs: https://github.com/Sogl/grav-plugin-impersonate/issues
+docs: https://github.com/Sogl/grav-plugin-impersonate/blob/develop/README.md
+license: MIT
+
+dependencies:
+  - { name: grav, version: '>=1.7.0' }
+
+form:
+  validation: loose
+  fields:
+    tabs:
+      type: tabs
+      active: 1
+      fields:
+        settings:
+          type: tab
+          title: PLUGIN_IMPERSONATE.TAB_SETTINGS
+          fields:
+            enabled:
+              type: toggle
+              label: PLUGIN_ADMIN.PLUGIN_STATUS
+              highlight: 1
+              default: 0
+              options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+              validate:
+                type: bool
+            allow_admin_targets:
+              type: toggle
+              label: PLUGIN_IMPERSONATE.ALLOW_ADMIN_TARGETS
+              highlight: 0
+              default: 0
+              options:
+                1: PLUGIN_ADMIN.YES
+                0: PLUGIN_ADMIN.NO
+              validate:
+                type: bool
+            token_ttl_seconds:
+              type: number
+              label: PLUGIN_IMPERSONATE.TOKEN_TTL_SECONDS
+              validate:
+                type: int
+                min: 10
+            default_redirect:
+              type: text
+              label: PLUGIN_IMPERSONATE.DEFAULT_REDIRECT
+              validate:
+                type: text
+            log_events:
+              type: toggle
+              label: PLUGIN_IMPERSONATE.LOG_EVENTS
+              highlight: 1
+              default: 1
+              options:
+                1: PLUGIN_ADMIN.YES
+                0: PLUGIN_ADMIN.NO
+              validate:
+                type: bool
+            show_ui_button:
+              type: toggle
+              label: PLUGIN_IMPERSONATE.SHOW_UI_BUTTON
+              highlight: 1
+              default: 1
+              options:
+                1: PLUGIN_ADMIN.YES
+                0: PLUGIN_ADMIN.NO
+              validate:
+                type: bool
+            confirm_on_switch:
+              type: toggle
+              label: PLUGIN_IMPERSONATE.CONFIRM_ON_SWITCH
+              highlight: 1
+              default: 1
+              options:
+                1: PLUGIN_ADMIN.YES
+                0: PLUGIN_ADMIN.NO
+              validate:
+                type: bool
+            icon_start:
+              type: text
+              label: PLUGIN_IMPERSONATE.ICON_START
+              default: fa-arrow-right-arrow-left
+              validate:
+                type: text
+            icon_stop:
+              type: text
+              label: PLUGIN_IMPERSONATE.ICON_STOP
+              default: fa-arrow-right-from-bracket
+              validate:
+                type: text
+            icon_self:
+              type: text
+              label: PLUGIN_IMPERSONATE.ICON_SELF
+              default: fa-arrow-right-to-bracket
+              validate:
+                type: text
+        logs:
+          type: tab
+          title: PLUGIN_IMPERSONATE.TAB_LOGS
+          fields:
+            logs_help:
+              type: spacer
+              text: PLUGIN_IMPERSONATE.LOGS_HELP
+              markdown: true
+            impersonate_log_viewer:
+              type: impersonatelog
+              rows: 20

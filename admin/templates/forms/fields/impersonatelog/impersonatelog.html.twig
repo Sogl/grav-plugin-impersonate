@@ -1,0 +1,27 @@
+{% extends "forms/field.html.twig" %}
+
+{% block field %}
+{% if field.security is empty or authorize(array(field.security)) %}
+    {% set log_content = impersonate_log_content|default(twig_vars.impersonate_log_content|default('')) %}
+    {% set fetch_url = impersonate_log_fetch_url|default(twig_vars.impersonate_log_fetch_url|default('')) %}
+    {% set clear_url = impersonate_log_clear_url|default(twig_vars.impersonate_log_clear_url|default('')) %}
+    {% set log_path = impersonate_log_path|default(twig_vars.impersonate_log_path|default('logs/impersonate.log')) %}
+    <div class="form-field js-impersonate-log-viewer"
+         data-fetch-url="{{ fetch_url|e('html_attr') }}"
+         data-clear-url="{{ clear_url|e('html_attr') }}"
+         data-loading-text="{{ 'PLUGIN_IMPERSONATE.LOG_LOADING'|t|e('html_attr') }}"
+         data-load-failed-text="{{ 'PLUGIN_IMPERSONATE.LOG_LOAD_FAILED'|t|e('html_attr') }}">
+        <div class="form-data" style="max-width:100%">
+            <textarea class="code js-impersonate-log-content" rows="{{ field.rows|default(18) }}" readonly="readonly" style="width:100%; min-height:420px; font-family:monospace">{{ fetch_url ? ('PLUGIN_IMPERSONATE.LOG_LOADING'|t) : ('PLUGIN_IMPERSONATE.LOG_LOAD_FAILED'|t) }}</textarea>
+            {% if clear_url %}
+                <div style="margin-top:12px; text-align:right">
+                    <button type="button" class="button js-impersonate-log-refresh" style="margin-right:8px">
+                        <i class="fa fa-refresh"></i> {{ 'PLUGIN_IMPERSONATE.REFRESH_LOG'|t }}
+                    </button>
+                    <button type="button" class="button danger js-impersonate-log-clear"><i class="fa fa-trash"></i> {{ 'PLUGIN_IMPERSONATE.CLEAR_LOG'|t }}</button>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}
+{% endblock %}
