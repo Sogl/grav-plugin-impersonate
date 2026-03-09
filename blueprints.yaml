@@ -1,7 +1,7 @@
 name: Impersonate
 slug: impersonate
 type: plugin
-version: 1.0.0
+version: 1.0.1
 description: Admin frontend impersonation for users
 icon: arrow-right-arrow-left
 author:

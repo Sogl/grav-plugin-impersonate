@@ -100,14 +100,7 @@ class FrontendController
              return;
         }
 
-        $session = $this->grav['session'];
-        $impersonate = (array)($session->impersonate ?? []);
-        $state = [
-            'active' => (bool)($impersonate['active'] ?? false),
-            'actor' => (string)($impersonate['actor'] ?? ''),
-            'target' => (string)($impersonate['target'] ?? ''),
-            'mode' => (string)($impersonate['mode'] ?? ''),
-        ];
+        $state = $this->getFrontendImpersonateState();
         $encoded = json_encode($state, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         if ($encoded !== false) {
             $this->grav['assets']->addInlineJs(
@@ -323,12 +316,11 @@ class FrontendController
 
     private function handleStatusRoute(): void
     {
-        $session = $this->grav['session'];
-        $impersonate = (array)($session->impersonate ?? []);
-        $active = (bool)($impersonate['active'] ?? false);
-        $actor = (string)($impersonate['actor'] ?? '');
-        $target = (string)($impersonate['target'] ?? '');
-        $mode = (string)($impersonate['mode'] ?? '');
+        $state = $this->getFrontendImpersonateState();
+        $active = (bool)($state['active'] ?? false);
+        $actor = (string)($state['actor'] ?? '');
+        $target = (string)($state['target'] ?? '');
+        $mode = (string)($state['mode'] ?? '');
         $requestedActor = trim((string)($this->grav['uri']->query('actor') ?? ''));
 
         if ($requestedActor !== '' && (!$active || $actor !== $requestedActor)) {
@@ -347,14 +339,76 @@ class FrontendController
 
         $this->jsonResponse([
             'status' => 'success',
-            'state' => [
-                'active' => $active,
-                'actor' => $actor,
-                'target' => $target,
-                'mode' => $mode,
-                'stop_nonce' => $active ? Utils::getNonce('impersonate-stop') : '',
-            ]
-        ]);
+                'state' => [
+                    'active' => $active,
+                    'actor' => $actor,
+                    'target' => $target,
+                    'mode' => $mode,
+                    'stop_nonce' => $active ? Utils::getNonce('impersonate-stop') : '',
+                ]
+            ]);
+    }
+
+    private function getFrontendImpersonateState(): array
+    {
+        $session = $this->grav['session'];
+        $impersonate = (array)($session->impersonate ?? []);
+        $state = [
+            'active' => (bool)($impersonate['active'] ?? false),
+            'actor' => (string)($impersonate['actor'] ?? ''),
+            'target' => (string)($impersonate['target'] ?? ''),
+            'mode' => (string)($impersonate['mode'] ?? ''),
+        ];
+
+        if (!$state['active']) {
+            return $state;
+        }
+
+        if ($this->isFrontendImpersonateStateValid($state)) {
+            return $state;
+        }
+
+        $this->clearStaleFrontendImpersonateState($state, 'frontend_state_stale');
+
+        return [
+            'active' => false,
+            'actor' => $state['actor'],
+            'target' => '',
+            'mode' => '',
+        ];
+    }
+
+    private function isFrontendImpersonateStateValid(array $state): bool
+    {
+        $actor = (string)($state['actor'] ?? '');
+        $target = (string)($state['target'] ?? '');
+        if ($actor === '' || $target === '') {
+            return false;
+        }
+
+        $user = $this->grav['user'] ?? null;
+        if (!is_object($user)) {
+            return false;
+        }
+
+        $username = (string)($user->username ?? '');
+        $authenticated = (bool)($user->authenticated ?? false);
+
+        return $authenticated && $username !== '' && $username === $target;
+    }
+
+    private function clearStaleFrontendImpersonateState(array $state, string $reason): void
+    {
+        $session = $this->grav['session'];
+        $actor = (string)($state['actor'] ?? '');
+        $target = (string)($state['target'] ?? '');
+
+        if ($actor !== '') {
+            $this->impersonator->activeStore()->clear($actor);
+            $this->impersonator->logEvent('impersonate_stop', $actor, $target, 'ok', $reason);
+        }
+
+        unset($session->impersonate);
     }
 
     private function wantsJsonResponse(): bool

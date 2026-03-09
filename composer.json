@@ -2,7 +2,7 @@
     "name": "sogl/impersonate",
     "type": "grav-plugin",
     "description": "Admin frontend impersonation for users",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "keywords": [
         "grav",
         "plugin",
