@@ -119,7 +119,7 @@ class Impersonator
             'created_at' => time(),
         ]);
 
-        return $this->frontendAbsoluteUrl('/impersonate/' . rawurlencode($token));
+        return $this->frontendUrl('/impersonate/' . rawurlencode($token));
     }
 
     public function issueStopUrl(string $actor): string
@@ -146,7 +146,7 @@ class Impersonator
             'created_at' => time(),
         ]);
 
-        return $this->frontendAbsoluteUrl('/impersonate/stop/' . rawurlencode($token));
+        return $this->frontendUrl('/impersonate/stop/' . rawurlencode($token));
     }
 
     public function consumeToken(string $token, string $expectedAction): ?array
@@ -218,6 +218,13 @@ class Impersonator
         }
 
         return Utils::url($path, true);
+    }
+
+    public function frontendUrl(string $path): string
+    {
+        $path = '/' . ltrim($path, '/');
+
+        return Utils::url($path, false);
     }
 
     public function safeRedirect(string $path): string

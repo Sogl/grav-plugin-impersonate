@@ -42,7 +42,7 @@ class AdminController
         ];
         $adminConfig = [
             'confirmOnSwitch' => (bool)$this->grav['config']->get('plugins.impersonate.confirm_on_switch', true),
-            'statusUrl' => $this->impersonator->frontendAbsoluteUrl('/impersonate/status'),
+            'statusUrl' => $this->impersonator->frontendUrl('/impersonate/status'),
             'icons' => [
                 'start' => $this->impersonator->iconClass('icon_start', 'fa-arrow-right-arrow-left'),
                 'stop' => $this->impersonator->iconClass('icon_stop', 'fa-arrow-right-from-bracket'),
